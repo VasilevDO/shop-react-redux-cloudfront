@@ -1,6 +1,8 @@
 import type { AWS } from '@serverless/typescript';
 import getProductsList from '@functions/getProductsList';
 import getProductsById from '@functions/getProductsById';
+import createProduct from '@functions/createProduct';
+import tables from './resources/dynamodb'
 
 const serverlessConfiguration: AWS = {
   service: 'product',
@@ -8,7 +10,7 @@ const serverlessConfiguration: AWS = {
   plugins: ['serverless-esbuild'],
   provider: {
     name: 'aws',
-    runtime: 'nodejs20.x',
+    runtime: 'nodejs16.x',
     region: 'eu-north-1',
     apiGateway: {
       minimumCompressionSize: 1024,
@@ -18,9 +20,40 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
+    iam: {
+      role: {
+        statements: [{
+          Effect: "Allow",
+          Action: [
+            "dynamodb:DescribeTable",
+            "dynamodb:Query",
+            "dynamodb:Scan",
+            "dynamodb:GetItem",
+            "dynamodb:PutItem",
+            "dynamodb:UpdateItem",
+            "dynamodb:DeleteItem",
+          ],
+          Resource: "arn:aws:dynamodb:eu-north-1:*:table/products",
+        },
+        {
+          Effect: "Allow",
+          Action: [
+            "dynamodb:DescribeTable",
+            "dynamodb:Query",
+            "dynamodb:Scan",
+            "dynamodb:GetItem",
+            "dynamodb:PutItem",
+            "dynamodb:UpdateItem",
+            "dynamodb:DeleteItem",
+          ],
+          Resource: "arn:aws:dynamodb:eu-north-1:*:table/stocks",
+        }],
+    }
   },
+},
   // import the function via paths
-  functions: { getProductsList, getProductsById },
+  functions: { getProductsList, getProductsById, createProduct },
+  resources: {Resources: {...tables}},
   package: { individually: true },
   custom: {
     esbuild: {
