@@ -40,7 +40,6 @@ export const createProduct = async (title: string, description: string, price: n
         price,
     }
 
-    console.log('PPP', product)
    await putItem('products', product)
    await putItem('stocks', {product_id: product.id, count})
 
