@@ -69,3 +69,7 @@ Combination of `cloudfront:setup` and `cloudfront:build:deploy` commands with or
 ### `serverless:remove`
 
 Remove an entire stack configured in `serverless.yml` via CloudFormation.
+
+### `task 2 links`
+CloudFront URL: https://d3eluionn1fkww.cloudfront.net
+S3-website: https://indulgence-store-app.s3.eu-north-1.amazonaws.com/index.html
