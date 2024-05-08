@@ -34,10 +34,39 @@ const serverlessConfiguration: AWS = {
         },
       ]
     }
-  }
+  },
+    httpApi: {
+      name: 'aws', 
+      cors: true,
+      authorizers: {
+        authorizer: {
+            type: 'request',
+            functionArn: 'arn:aws:lambda:eu-north-1:637423538581:function:authorization-dev-authorizer',
+            enableSimpleResponses: true,
+            payloadVersion: '2.0'
+          }
+      }
+    }
   },
   // import the function via paths
   functions: { importProductsFile, importFileParser },
+  resources: {
+    Resources: {
+      Unauthorized: {
+        Type: "AWS::ApiGateway::GatewayResponse",
+        Properties: {
+          ResponseParameters: {
+              'gatewayresponse.header.Access-Control-Allow-Origin': "'*'",
+              'gatewayresponse.header.Access-Control-Allow-Headers': "'*'"
+            },
+          ResponseType: 'DEFAULT_4XX',
+          RestApiId: {
+            Ref: 'ApiGatewayRestApi'
+          },
+        },
+      }
+    }
+  },
   package: { individually: true },
   custom: {
     esbuild: {
